@@ -1,0 +1,116 @@
+[
+  {
+    "Package": "pdfpig",
+    "PackageSha256": "D67171846EA8C28F50359137065FEC4514266D7A32B23EAE6C5F2EBED8FFCFC4",
+    "Version": "0.1.16",
+    "Files": [
+      {
+        "Sha256": "8F01694551609D47A30C7CC721A661696B348FF3A1119603D828857A0C6092CC",
+        "File": "UglyToad.PdfPig.Core.dll",
+        "Entry": "lib/net462/UglyToad.PdfPig.Core.dll"
+      },
+      {
+        "Sha256": "2E84FD49C0C86DD61E7248B10B5F19FF6432C1CA3A2CA7318957698C44C72280",
+        "File": "UglyToad.PdfPig.DocumentLayoutAnalysis.dll",
+        "Entry": "lib/net462/UglyToad.PdfPig.DocumentLayoutAnalysis.dll"
+      },
+      {
+        "Sha256": "9E7CC3E3AA2574850FFFEF6FD4CD898F75D72D4FE166C86C638F982B80D297C9",
+        "File": "UglyToad.PdfPig.Fonts.dll",
+        "Entry": "lib/net462/UglyToad.PdfPig.Fonts.dll"
+      },
+      {
+        "Sha256": "CC0A71472B15FB47C8ED26A89F976B2F180053E22B2AB864AFD8E2A664415E60",
+        "File": "UglyToad.PdfPig.Package.dll",
+        "Entry": "lib/net462/UglyToad.PdfPig.Package.dll"
+      },
+      {
+        "Sha256": "E444EFFE9B015120106B6A4DE808632BEC6EEF5147900F63CE0230561FD43ABC",
+        "File": "UglyToad.PdfPig.Tokenization.dll",
+        "Entry": "lib/net462/UglyToad.PdfPig.Tokenization.dll"
+      },
+      {
+        "Sha256": "4A72A443FAA3BA8DDAF718B0378D9B5D9B863890E584BC8082FB7FE14F5E59B5",
+        "File": "UglyToad.PdfPig.Tokens.dll",
+        "Entry": "lib/net462/UglyToad.PdfPig.Tokens.dll"
+      },
+      {
+        "Sha256": "9CF20B52B968694DBC2696FD7C5575B9A86ACC3CAA61686F8E80E3AC6A5E0AEB",
+        "File": "UglyToad.PdfPig.dll",
+        "Entry": "lib/net462/UglyToad.PdfPig.dll"
+      }
+    ]
+  },
+  {
+    "Package": "microsoft.bcl.hashcode",
+    "PackageSha256": "F3B9B2BAB0BF8CC717D5FDF6D7AEE3EC54E36D9E85BD41347ACAE161319CBD6B",
+    "Version": "6.0.0",
+    "Files": [
+      {
+        "Sha256": "3A4E851EE5FC0F6182AA5A3D65DC56FCD6979B65334B5C3B92FBDC791457C0AB",
+        "File": "Microsoft.Bcl.HashCode.dll",
+        "Entry": "lib/net462/Microsoft.Bcl.HashCode.dll"
+      }
+    ]
+  },
+  {
+    "Package": "system.memory",
+    "PackageSha256": "3A10042B350CE9E11A1FDF4370668CCF6A452C6FEAFCDE0A556AAA881614385A",
+    "Version": "4.6.0",
+    "Files": [
+      {
+        "Sha256": "B8FE216AFF0F6D162F8EEFE7BE1712162B7D8199E20CE2E70FFAC36C7CE20A4C",
+        "File": "System.Memory.dll",
+        "Entry": "lib/net462/System.Memory.dll"
+      }
+    ]
+  },
+  {
+    "Package": "system.valuetuple",
+    "PackageSha256": "9E21FA9767D4E76BC0CEE065C1D40CC34384A114BFEC4D70E6C981168A926802",
+    "Version": "4.5.0",
+    "Files": [
+      {
+        "Sha256": "E905D102585B22C6DF04F219AF5CBDBFA7BC165979E9788B62DF6DCC165E10F4",
+        "File": "System.ValueTuple.dll",
+        "Entry": "lib/net47/System.ValueTuple.dll"
+      }
+    ]
+  },
+  {
+    "Package": "system.buffers",
+    "PackageSha256": "736425805075E8895F066B3960BB1308543F41E2A84BAA61D5AF6675192AFC97",
+    "Version": "4.6.0",
+    "Files": [
+      {
+        "Sha256": "3AF1E07305BED0ABE0CF32D9854E0A7F5F470216ADEE1B87D02350BE09D31B35",
+        "File": "System.Buffers.dll",
+        "Entry": "lib/net462/System.Buffers.dll"
+      }
+    ]
+  },
+  {
+    "Package": "system.runtime.compilerservices.unsafe",
+    "PackageSha256": "372AAAA51707BA6CD2C69B2044382E0F9486C1D50D1C16E8D0E39DCCB4C8CC25",
+    "Version": "6.1.0",
+    "Files": [
+      {
+        "Sha256": "2D6F419D641682D8EFC4A40E850D2E85DE519D6823B93DAF2AEEE63206D4E32D",
+        "File": "System.Runtime.CompilerServices.Unsafe.dll",
+        "Entry": "lib/net462/System.Runtime.CompilerServices.Unsafe.dll"
+      }
+    ]
+  },
+  {
+    "Package": "system.numerics.vectors",
+    "PackageSha256": "7CA4B7B964361E647AF6F3610C7A8F2D834EB77AA98E25903976431EF444D475",
+    "Version": "4.6.0",
+    "Files": [
+      {
+        "Sha256": "22C84BE385FE8BA6D0E0138952748F28D781FCE36078B5A7AED91A6104BCD99B",
+        "File": "System.Numerics.Vectors.dll",
+        "Entry": "lib/net462/System.Numerics.Vectors.dll"
+      }
+    ]
+  }
+]
