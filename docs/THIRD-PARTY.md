@@ -12,7 +12,7 @@ The PDF reader uses PdfPig 0.1.16 by UglyToad and targets .NET Framework 4.6.2. 
 | System.Runtime.CompilerServices.Unsafe | 6.1.0 | MIT |
 | System.ValueTuple | 4.5.0 | MIT |
 
-The original library notices are in `dependencies/PdfPig-LICENSE.txt` and `dependencies/Microsoft-LICENSE.txt`. Package versions, official NuGet package SHA-256 values, and selected DLL SHA-256 values are recorded in `dependencies/packages.lock.json`. `Restore-Dependencies.ps1` restores those bytes for development and verifies their hashes.
+The original library notices are in `dependencies/PdfPig-LICENSE.txt` and `dependencies/Microsoft-LICENSE.txt`. Package versions, official NuGet package SHA-256 values, and selected DLL SHA-256 values are recorded in `dependencies/packages.lock.json`. `tools/build/Restore-Dependencies.ps1` restores those bytes for development and verifies their hashes.
 
 Official sources: [PdfPig](https://github.com/UglyToad/PdfPig), [NuGet](https://www.nuget.org/packages/PdfPig/0.1.16), and [Microsoft maintenance packages](https://github.com/dotnet/maintenance-packages).
 

@@ -8,16 +8,20 @@ Busca indicios de wallets, claves, frases y datos relacionados con criptomonedas
 
 Los CSV guardan ubicaciones y metadatos, pero no frases ni claves encontradas. Las secuencias parecidas a frases y las cadenas con forma de clave se sustituyen por marcadores; esto puede ocultar parte del nombre de un archivo. Para reducir riesgos al abrir los CSV en una hoja de cálculo, las celdas que podrían interpretarse como fórmulas se exportan con un apóstrofo inicial. Mantén los reportes privados.
 
+## Organización del repositorio
+
+El escáner principal permanece en la raíz. Las utilidades de revisión están en `tools/review/` y las herramientas de compilación en `tools/build/`. `Export-ScanReviewReports.ps1` exporta los reportes derivados a partir de un CSV existente. Los ejemplos siguientes usan las nuevas rutas.
+
 ## Revisar archivos encontrados a partir de los reportes
 
-`Filter-RecoveryCandidates.ps1` lee los CSV de una carpeta (`-ReportDirectory`) o uno individual (`-CsvPath`), consolida ubicaciones sin distinguir mayúsculas/minúsculas y normaliza separadores de ruta. Reconoce `Tipo`, `Tipos` e `Indicadores`; los resúmenes sin ubicaciones individuales se identifican y no inventan archivos. El CSV de salida de la propia ejecución no se incorpora como entrada.
+`tools/review/Filter-RecoveryCandidates.ps1` lee los CSV de una carpeta (`-ReportDirectory`) o uno individual (`-CsvPath`), consolida ubicaciones sin distinguir mayúsculas/minúsculas y normaliza separadores de ruta. Reconoce `Tipo`, `Tipos` e `Indicadores`; los resúmenes sin ubicaciones individuales se identifican y no inventan archivos. El CSV de salida de la propia ejecución no se incorpora como entrada.
 
 Por defecto relee los archivos con indicios BIP39, incluidos los fragmentados. `-VerificationScope AllReported` relee todos los archivos reportados, sin filtro por extensión. La consolidación de todos los CSV termina antes de iniciar esa relectura; cada ubicación se abre una sola vez. Abre fuentes únicamente para lectura, usa los lectores de texto/PDF/ZIP/Office del escáner y mantiene OCR desactivado. Registra archivos ausentes, inaccesibles, cambiados durante la lectura, rutas redactadas y límites; no los interpreta como ausencia de evidencia. Las carpetas inaccesibles no se recorren. Los recursos públicos/pruebas previamente identificados también se releen; si vuelven a tener BIP39 se conservan en la auditoría como `bip39_in_public_context`, fuera de la lista principal. No descifra wallets ni recupera archivos borrados.
 
 El detector 10.12 reconoce los 24 vectores públicos de BIP39 publicados por [Trezor](https://github.com/trezor/python-mnemonic/blob/master/vectors.json) por su entropía, sin exportar las palabras. La utilidad usa un modo dedicado a BIP39 para omitir cálculos de Monero, SLIP39 y validaciones ajenas a la frase. Conserva las comprobaciones de longitud, diccionario, checksum, continuidad y calidad de separadores. `public_example_detected` identifica una coincidencia con un ejemplo publicado; `weak_bip39_candidate` conserva fragmentados, repetitivos y diccionarios para revisión. Ningún estado demuestra que una wallet sea personal o tenga fondos.
 
 ~~~powershell
-.\Filter-RecoveryCandidates.ps1 -ReportDirectory 'D:\wallet-scan-reports' -VerificationScope AllReported -CpuCorePercent 80 -Language es
+.\tools\review\Filter-RecoveryCandidates.ps1 -ReportDirectory 'D:\wallet-scan-reports' -VerificationScope AllReported -CpuCorePercent 80 -Language es
 ~~~
 
 La salida en modo carpeta es `recuperacion-bip39-unicos.csv`: una fila por ubicación con BIP39 completo y checksum válido detectado al releer. `CantidadReportes` y `ReportesOrigen` indican de qué CSV procede; una ubicación repetida no genera nuevos casos. `recuperacion-bip39-unicos.verificacion.csv` conserva estados y etiquetas actuales sin frases ni claves; durante la relectura se guarda un avance `.verificacion.partial.csv` cada 250 lecturas. Los estados `bip39_detected_incomplete_read` e `incomplete_read` requieren revisar los límites. Los formatos binarios no compatibles o datos cifrados pueden no revelar texto; un resultado sin BIP39 no garantiza que no haya un respaldo.
@@ -28,10 +32,10 @@ La salida en modo carpeta es `recuperacion-bip39-unicos.csv`: una fila por ubica
 
 ## Verificar la estructura de candidatos BIP39
 
-`Verify-Bip39Structure.ps1` es una segunda revisión localizada. Consolida todos los CSV de `-ReportDirectory` (y subcarpetas con `-Recurse`), reconoce `Tipo`, `Tipos`, `Indicadores` y las etiquetas de auditoría, y relee una sola vez cada ubicación con indicios BIP39. No hace un inventario nuevo de los discos. El directorio de salida no se incorpora como entrada.
+`tools/review/Verify-Bip39Structure.ps1` es una segunda revisión localizada. Consolida todos los CSV de `-ReportDirectory` (y subcarpetas con `-Recurse`), reconoce `Tipo`, `Tipos`, `Indicadores` y las etiquetas de auditoría, y relee una sola vez cada ubicación con indicios BIP39. No hace un inventario nuevo de los discos. El directorio de salida no se incorpora como entrada.
 
 ~~~powershell
-powershell.exe -NoProfile -File .\Verify-Bip39Structure.ps1 -ReportDirectory 'D:\wallet-scan-reports-backups' -Recurse -OutputDirectory 'D:\wallet-scan-structural-review' -CpuCorePercent 80 -MaxDocumentMB 128 -MaxExpandedMB 512 -Language es
+powershell.exe -NoProfile -File .\tools\review\Verify-Bip39Structure.ps1 -ReportDirectory 'D:\wallet-scan-reports-backups' -Recurse -OutputDirectory 'D:\wallet-scan-structural-review' -CpuCorePercent 80 -MaxDocumentMB 128 -MaxExpandedMB 512 -Language es
 ~~~
 
 El inspector independiente comprueba diccionarios inglés/español, 12/15/18/21/24 palabras, checksum, separadores, palabras incrustadas en identificadores, diversidad, secuencias de diccionario y orden de listas numeradas. Detecta los vectores públicos conocidos. No exporta palabras, entropía ni identificadores derivados de una frase.
@@ -71,7 +75,7 @@ La interfaz de terminal usa inglés por defecto (`-Language en`). Para mostrar m
 .\Scan-CryptoArtifacts.ps1 -Language es
 ~~~
 
-Los nombres de columnas, identificadores de detección y textos de contexto de los CSV conservan el esquema existente en español para mantener compatibilidad. El idioma de la interfaz no cambia los detectores ni los límites de lectura. Los mensajes propios de Windows pueden aparecer en el idioma del sistema. `New-ScanReviewReports.ps1` también acepta `-Language en|es` para sus mensajes de consola.
+Los nombres de columnas, identificadores de detección y textos de contexto de los CSV conservan el esquema existente en español para mantener compatibilidad. El idioma de la interfaz no cambia los detectores ni los límites de lectura. Los mensajes propios de Windows pueden aparecer en el idioma del sistema. `tools/review/Export-ScanReviewReports.ps1` también acepta `-Language en|es` para sus mensajes de consola.
 
 Extrae la carpeta completa del ZIP y abre PowerShell en ella:
 
@@ -232,7 +236,7 @@ La lista principal requiere contenido validado: claves privadas con checksum/ran
 Al terminar cada escaneo, el programa genera automáticamente los cinco reportes derivados. Para regenerarlos de un resultado anterior, sin volver a leer las unidades:
 
 ```powershell
-powershell.exe -NoProfile -File .\New-ScanReviewReports.ps1 -CsvPath .\crypto-artifact-scan-C.csv
+powershell.exe -NoProfile -File .\tools\review\Export-ScanReviewReports.ps1 -CsvPath .\crypto-artifact-scan-C.csv
 ```
 
 `Confianza` combina el formato con el contexto de la ruta: un checksum o estructura reconocida suele ser `Alta`; señales dentro de pruebas del escáner o listas públicas exactas se muestran como `Baja`, y frases con checksum dentro de software instalado/dependencias como `Media`. `Media` también incluye estructuras parciales; `Baja`, menciones, candidatos incompletos e identificadores públicos; `No evaluable`, incidencias de cobertura. Un registro local de sesión de usuario conserva su contexto separado de los recursos de software. Un candidato WIF sin checksum validado queda marcado como no confirmado. La confianza no mide titularidad, acceso a la wallet ni fondos. En keystores Ethereum V3 solo se comprueba la estructura; no se descifra ni verifica el MAC. El contexto de ruta es una pista para priorizar revisión, no una prueba de origen. Los reportes derivados solo incluyen rutas, etiquetas y metadatos; nunca el contenido detectado. El resumen de cobertura no incluye rutas: los conteos por tipo pueden solaparse si una ubicación tuvo varias incidencias; el total indica ubicaciones únicas.
@@ -293,14 +297,14 @@ El lector PDF se comparte y procesa un PDF a la vez para conservar el límite de
 Desde la raíz del repositorio, compila el paquete con Windows PowerShell 5.1:
 
 ~~~powershell
-powershell.exe -NoProfile -File .\Build-Package.ps1
+powershell.exe -NoProfile -File .\tools\build\Build-Package.ps1
 ~~~
 
 Si faltan dependencias, primero restáuralas y valida sus hashes; este paso requiere Internet:
 
 ~~~powershell
-powershell.exe -NoProfile -File .\Restore-Dependencies.ps1
-powershell.exe -NoProfile -File .\Build-Package.ps1
+powershell.exe -NoProfile -File .\tools\build\Restore-Dependencies.ps1
+powershell.exe -NoProfile -File .\tools\build\Build-Package.ps1
 ~~~
 
 Después de compilar, ejecuta la regresión completa y guarda los logs fuera del repositorio:

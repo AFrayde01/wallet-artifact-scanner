@@ -5,7 +5,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
-$repositoryRoot = if ([string]::IsNullOrWhiteSpace($SourceDirectory)) { Split-Path -Parent $PSScriptRoot } else { $SourceDirectory }
+$repositoryRoot = if ([string]::IsNullOrWhiteSpace($SourceDirectory)) { Split-Path -Parent (Split-Path -Parent $PSScriptRoot) } else { $SourceDirectory }
 if ([string]::IsNullOrWhiteSpace($OutputAssembly)) { $OutputAssembly = Join-Path $repositoryRoot 'CryptoMnemonicScanner-10.12.dll' }
 if ($PSVersionTable.PSVersion.Major -ne 5) { throw 'Compile this component with Windows PowerShell 5.1.' }
 $sourceRoot = Join-Path $repositoryRoot 'src'

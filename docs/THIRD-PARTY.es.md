@@ -12,7 +12,7 @@ La lectura PDF usa PdfPig 0.1.16, publicado por UglyToad, con destino .NET Frame
 | System.Runtime.CompilerServices.Unsafe | 6.1.0 | MIT |
 | System.ValueTuple | 4.5.0 | MIT |
 
-Las licencias y avisos originales se conservan en dependencies/PdfPig-LICENSE.txt y dependencies/Microsoft-LICENSE.txt. Las versiones, SHA-256 de los paquetes oficiales de NuGet y SHA-256 de cada DLL seleccionada están en dependencies/packages.lock.json. Restore-Dependencies.ps1 permite restaurar esos mismos bytes en desarrollo, con Internet y validación de hashes.
+Las licencias y avisos originales se conservan en dependencies/PdfPig-LICENSE.txt y dependencies/Microsoft-LICENSE.txt. Las versiones, SHA-256 de los paquetes oficiales de NuGet y SHA-256 de cada DLL seleccionada están en dependencies/packages.lock.json. tools/build/Restore-Dependencies.ps1 permite restaurar esos mismos bytes en desarrollo, con Internet y validación de hashes.
 
 Fuentes oficiales: [PdfPig](https://github.com/UglyToad/PdfPig), [NuGet](https://www.nuget.org/packages/PdfPig/0.1.16), [paquetes Microsoft](https://github.com/dotnet/maintenance-packages).
 

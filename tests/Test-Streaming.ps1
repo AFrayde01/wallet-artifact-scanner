@@ -26,7 +26,7 @@ try {
     $source += $newLine + 'public static class CryptoInventoryTestHooks { public static readonly System.Threading.ManualResetEvent ContentStarted = new System.Threading.ManualResetEvent(false); }' + $newLine
     [IO.File]::WriteAllText($sourcePath, $source)
     $variantDll = Join-Path $base 'variant.dll'
-    & powershell.exe -NoProfile -File (Join-Path $repo 'Compile-Scanner.ps1') -SourceDirectory $copy -OutputAssembly $variantDll
+    & powershell.exe -NoProfile -File (Join-Path $repo 'tools/build/Compile-Scanner.ps1') -SourceDirectory $copy -OutputAssembly $variantDll
     if ($LASTEXITCODE -ne 0) { throw 'Streaming fixture compilation failed.' }
     Copy-Item -LiteralPath $variantDll -Destination (Join-Path $copy 'CryptoMnemonicScanner-10.12.dll') -Force
     $large = Join-Path $inputRoot 'sample.log'

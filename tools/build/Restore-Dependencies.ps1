@@ -2,7 +2,7 @@
 param()
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.IO.Compression,System.IO.Compression.FileSystem
-$repositoryRoot = Split-Path -Parent $PSScriptRoot
+$repositoryRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $vendor = Join-Path $repositoryRoot 'dependencies'
 $lock = Get-Content -LiteralPath (Join-Path $vendor 'packages.lock.json') -Raw | ConvertFrom-Json
 $tempRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\') + '\'

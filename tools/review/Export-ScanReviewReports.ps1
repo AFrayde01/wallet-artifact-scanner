@@ -7,7 +7,8 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
-. (Join-Path $PSScriptRoot 'scripts\CsvOutputSafety.ps1')
+$repositoryRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+. (Join-Path $repositoryRoot 'scripts\CsvOutputSafety.ps1')
 function Get-ReviewText {
     param([string]$English, [string]$Spanish)
     if ($Language -eq 'es') { return $Spanish }

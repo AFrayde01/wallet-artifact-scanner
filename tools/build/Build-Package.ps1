@@ -3,7 +3,7 @@ param([switch]$SkipCompile)
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.IO.Compression
-$repositoryRoot = Split-Path -Parent $PSScriptRoot
+$repositoryRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $dependencyRoot = Join-Path $repositoryRoot 'dependencies'
 $tempRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\') + '\'
 $stage = Join-Path $tempRoot ('wallet-scanner-build-' + [guid]::NewGuid().ToString('N'))
@@ -39,7 +39,7 @@ try {
 
     $files = @(
         'README.md', 'README.es.md', 'LICENSE',
-        'Scan-CryptoArtifacts.ps1', 'Filter-RecoveryCandidates.ps1', 'New-ScanReviewReports.ps1', 'Verify-Bip39Structure.ps1',
+        'Scan-CryptoArtifacts.ps1', 'tools/review/Filter-RecoveryCandidates.ps1', 'tools/review/Export-ScanReviewReports.ps1', 'tools/review/Verify-Bip39Structure.ps1',
         'CryptoMnemonicScanner-10.12.dll', 'CryptoBip39Inspector.dll',
         'scripts/CsvOutputSafety.ps1', 'scripts/Read-PdfWorker.ps1',
         'src/CryptoBip39Inspector.cs', 'src/CryptoDocumentScanner.cs', 'src/CryptoEvidenceQuality.cs', 'src/CryptoFileScanner.cs',

@@ -42,7 +42,7 @@ try {
         (New-ReportSourceRow 'C:\Users\tester\Documents\locked.pdf' 'documento_cifrado_sin_revisar')
     ) | Export-Csv -LiteralPath $incidents -NoTypeInformation -Encoding UTF8
 
-    $result = & (Join-Path $PSScriptRoot '..\New-ScanReviewReports.ps1') -CsvPath $main
+    $result = & (Join-Path $PSScriptRoot '..\tools/review/Export-ScanReviewReports.ps1') -CsvPath $main
     $reviewPath = [IO.Path]::ChangeExtension($main, '.revision.csv')
     $summaryPath = [IO.Path]::ChangeExtension($main, '.secundarios-resumen.csv')
     $review = @(Import-Csv -LiteralPath $reviewPath)
@@ -71,7 +71,7 @@ try {
     $reviewTime = [IO.File]::GetLastWriteTimeUtc($reviewPath)
     $summaryTime = [IO.File]::GetLastWriteTimeUtc($summaryPath)
     Start-Sleep -Milliseconds 1100
-    $repeat = & (Join-Path $PSScriptRoot '..\New-ScanReviewReports.ps1') -CsvPath $main
+    $repeat = & (Join-Path $PSScriptRoot '..\tools/review/Export-ScanReviewReports.ps1') -CsvPath $main
     Assert-Review (-not $repeat.RevisionChanged -and -not $repeat.SecondarySummaryChanged) 'Unchanged inputs do not rewrite reports'
     Assert-Review ([IO.File]::GetLastWriteTimeUtc($reviewPath) -eq $reviewTime -and [IO.File]::GetLastWriteTimeUtc($summaryPath) -eq $summaryTime) 'Idempotent report timestamps remain unchanged'
     Assert-Review ([Linq.Enumerable]::SequenceEqual([byte[]]$reviewBefore, [byte[]][IO.File]::ReadAllBytes($reviewPath))) 'Review report bytes remain stable'
@@ -83,7 +83,7 @@ try {
     $unrelatedTime = [IO.File]::GetLastWriteTimeUtc($unrelatedSource)
     Remove-Item -LiteralPath $result.PrioritizedCsv
     [void](New-Item -ItemType HardLink -Path $result.PrioritizedCsv -Target $unrelatedSource)
-    $linkedReport = & (Join-Path $PSScriptRoot '..\New-ScanReviewReports.ps1') -CsvPath $main
+    $linkedReport = & (Join-Path $PSScriptRoot '..\tools/review/Export-ScanReviewReports.ps1') -CsvPath $main
     Assert-Review ((Get-FileHash -LiteralPath $unrelatedSource).Hash -eq $unrelatedHash -and [IO.File]::GetLastWriteTimeUtc($unrelatedSource) -eq $unrelatedTime) 'Replacing an existing report hard link cannot modify its source bytes or timestamp'
     Assert-Review ([IO.File]::ReadAllLines($linkedReport.PrioritizedCsv)[0] -eq '"Ubicacion","Categoria","Tipo","Confianza","Contexto","FechaCreacionUtc","FechaModificacionUtc"') 'Replacing a report hard link still generates the expected report'
 

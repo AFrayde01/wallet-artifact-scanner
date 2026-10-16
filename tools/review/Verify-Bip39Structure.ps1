@@ -15,7 +15,8 @@ param(
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
-. (Join-Path $PSScriptRoot 'scripts\CsvOutputSafety.ps1')
+$repositoryRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+. (Join-Path $repositoryRoot 'scripts\CsvOutputSafety.ps1')
 function Ui([string]$English,[string]$Spanish) { if ($Language -eq 'es') { return $Spanish }; return $English }
 function Field($Row,[string]$Name) { $property=$Row.PSObject.Properties[$Name]; if ($null -eq $property) { return '' }; return [string]$property.Value }
 function Safe([string]$Value) { return [CryptoBip39Inspector]::SafeLabel($Value) }
@@ -62,16 +63,16 @@ foreach ($source in $sources) {
     }
 }
 Write-Host ((Ui 'Consolidated BIP39 locations: {0}' 'Ubicaciones BIP39 consolidadas: {0}') -f $locations.Count)
-[void][Reflection.Assembly]::LoadFile((Join-Path $PSScriptRoot 'CryptoBip39Inspector.dll'))
-[void][Reflection.Assembly]::LoadFile((Join-Path $PSScriptRoot 'CryptoMnemonicScanner-10.12.dll'))
-$sourceRoot=Join-Path $PSScriptRoot 'src'
-$wordListRoot=Join-Path $PSScriptRoot 'resources\wordlists'
+[void][Reflection.Assembly]::LoadFile((Join-Path $repositoryRoot 'CryptoBip39Inspector.dll'))
+[void][Reflection.Assembly]::LoadFile((Join-Path $repositoryRoot 'CryptoMnemonicScanner-10.12.dll'))
+$sourceRoot=Join-Path $repositoryRoot 'src'
+$wordListRoot=Join-Path $repositoryRoot 'resources\wordlists'
 $detectorSource=[IO.File]::ReadAllText((Join-Path $sourceRoot 'CryptoMnemonicScanner.cs'))
 $exampleSection=[regex]::Match($detectorSource,'PublicBip39Examples\s*=.*?\{(.*?)\};',[Text.RegularExpressions.RegexOptions]::Singleline)
 if (-not $exampleSection.Success) { throw 'Public example definitions are missing; extract the complete package.' }
 $examples=@([regex]::Matches($exampleSection.Groups[1].Value,'"([0-9a-f]{32,64})"') | ForEach-Object { $_.Groups[1].Value })
 [CryptoBip39Inspector]::Configure([IO.File]::ReadAllLines((Join-Path $wordListRoot 'bip39-english.txt')),[IO.File]::ReadAllLines((Join-Path $wordListRoot 'bip39-spanish.txt')),[string[]]$examples)
-foreach ($name in @('System.Runtime.CompilerServices.Unsafe','System.Buffers','System.Numerics.Vectors','System.Memory','System.ValueTuple','Microsoft.Bcl.HashCode','UglyToad.PdfPig.Core','UglyToad.PdfPig.Tokens','UglyToad.PdfPig.Tokenization','UglyToad.PdfPig.Fonts','UglyToad.PdfPig','UglyToad.PdfPig.DocumentLayoutAnalysis')) { [void][Reflection.Assembly]::LoadFrom((Join-Path $PSScriptRoot ('dependencies\'+$name+'.dll'))) }
+foreach ($name in @('System.Runtime.CompilerServices.Unsafe','System.Buffers','System.Numerics.Vectors','System.Memory','System.ValueTuple','Microsoft.Bcl.HashCode','UglyToad.PdfPig.Core','UglyToad.PdfPig.Tokens','UglyToad.PdfPig.Tokenization','UglyToad.PdfPig.Fonts','UglyToad.PdfPig','UglyToad.PdfPig.DocumentLayoutAnalysis')) { [void][Reflection.Assembly]::LoadFrom((Join-Path $repositoryRoot ('dependencies\'+$name+'.dll'))) }
 Add-Type -AssemblyName System.IO.Compression
 $matchRows=[Collections.Generic.List[object]]::new()
 $issueRows=[Collections.Generic.List[object]]::new()

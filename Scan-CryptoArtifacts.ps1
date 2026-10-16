@@ -115,7 +115,7 @@ $script:EnglishConsoleText = @{
     '-ExcludePath debe indicar una subcarpeta, no la ubicación completa que se escanea.' = '-ExcludePath must specify a subfolder rather than the entire scanned location.'
     'La ruta excluida debe estar dentro de una ubicación escaneada: ' = 'The excluded path must be inside a scanned location: '
     '-CsvPath no puede estar vacío.' = '-CsvPath cannot be empty.'
-    'Falta New-ScanReviewReports.ps1 en el paquete.' = 'New-ScanReviewReports.ps1 is missing from the package.'
+    'Falta tools/review/Export-ScanReviewReports.ps1 en el paquete.' = 'tools/review/Export-ScanReviewReports.ps1 is missing from the package.'
     'desactivada' = 'disabled'
     'nueva' = 'new'
     'reescaneo solicitado' = 'rescan requested'
@@ -456,7 +456,7 @@ $dictionaryHashes = @(
 $script:ScannerDataFilePaths = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
 foreach ($name in @(
     'README.md', 'README.es.md', 'LICENSE',
-    'Scan-CryptoArtifacts.ps1', 'Filter-RecoveryCandidates.ps1', 'New-ScanReviewReports.ps1', 'Verify-Bip39Structure.ps1',
+    'Scan-CryptoArtifacts.ps1', 'tools/review/Filter-RecoveryCandidates.ps1', 'tools/review/Export-ScanReviewReports.ps1', 'tools/review/Verify-Bip39Structure.ps1',
     'CryptoMnemonicScanner-10.12.dll', 'CryptoBip39Inspector.dll',
     'scripts/CsvOutputSafety.ps1', 'scripts/Read-PdfWorker.ps1',
     'src/CryptoBip39Inspector.cs', 'src/CryptoDocumentScanner.cs', 'src/CryptoEvidenceQuality.cs', 'src/CryptoFileScanner.cs',
@@ -815,7 +815,7 @@ function Get-AlgorithmFingerprint {
     # change scan evidence and must not invalidate the content cache.
     foreach ($identity in $script:RuntimeManifestParts) {
         $runtimeName = $identity.Substring(0, $identity.IndexOf('='))
-        if ($runtimeName -in @('README.md', 'README.es.md', 'LICENSE', 'docs/SECURITY.md', 'docs/THIRD-PARTY.md', 'docs/THIRD-PARTY.es.md', 'scripts/CsvOutputSafety.ps1', 'New-ScanReviewReports.ps1', 'Filter-RecoveryCandidates.ps1', 'Verify-Bip39Structure.ps1', 'src/CryptoBip39Inspector.cs', 'CryptoBip39Inspector.dll')) { continue }
+        if ($runtimeName -in @('README.md', 'README.es.md', 'LICENSE', 'docs/SECURITY.md', 'docs/THIRD-PARTY.md', 'docs/THIRD-PARTY.es.md', 'scripts/CsvOutputSafety.ps1', 'tools/review/Export-ScanReviewReports.ps1', 'tools/review/Filter-RecoveryCandidates.ps1', 'tools/review/Verify-Bip39Structure.ps1', 'src/CryptoBip39Inspector.cs', 'CryptoBip39Inspector.dll')) { continue }
         $parts.Add($identity)
     }
     foreach ($name in @('CryptoMnemonicScanner-10.12.dll', 'scripts/Read-PdfWorker.ps1', 'resources/wordlists/bip39-english.txt', 'resources/wordlists/bip39-spanish.txt', 'resources/wordlists/monero-english.txt',
@@ -1312,8 +1312,8 @@ $reviewReportError = $null
 if (-not $script:RecoveryPhraseSearch) {
     Write-Host (Get-ScanText 'El escaneo terminó; generando contexto, resumen secundario y reporte de cobertura...')
     try {
-        $reviewScriptPath = Join-Path $PSScriptRoot 'New-ScanReviewReports.ps1'
-        if (-not (Test-Path -LiteralPath $reviewScriptPath -PathType Leaf)) { throw (Get-ScanText 'Falta New-ScanReviewReports.ps1 en el paquete.') }
+        $reviewScriptPath = Join-Path $PSScriptRoot 'tools/review/Export-ScanReviewReports.ps1'
+        if (-not (Test-Path -LiteralPath $reviewScriptPath -PathType Leaf)) { throw (Get-ScanText 'Falta tools/review/Export-ScanReviewReports.ps1 en el paquete.') }
         $reviewReport = & $reviewScriptPath -CsvPath $resolvedCsvPath -Language $Language
     }
     catch {

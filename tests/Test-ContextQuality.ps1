@@ -28,7 +28,7 @@ for($i=0;$i -lt 6;$i++) { $words[$i]=[IO.File]::ReadAllLines((Join-Path $wordLis
 $dependencyLock=Get-Content -LiteralPath (Join-Path $repo 'dependencies\packages.lock.json') -Raw|ConvertFrom-Json
 $runtimeNames=@(
     'README.md','README.es.md','LICENSE',
-    'Scan-CryptoArtifacts.ps1','Filter-RecoveryCandidates.ps1','New-ScanReviewReports.ps1','Verify-Bip39Structure.ps1',
+    'Scan-CryptoArtifacts.ps1','tools/review/Filter-RecoveryCandidates.ps1','tools/review/Export-ScanReviewReports.ps1','tools/review/Verify-Bip39Structure.ps1',
     'CryptoMnemonicScanner-10.12.dll','CryptoBip39Inspector.dll',
     'scripts/CsvOutputSafety.ps1','scripts/Read-PdfWorker.ps1',
     'src/CryptoBip39Inspector.cs','src/CryptoDocumentScanner.cs','src/CryptoEvidenceQuality.cs','src/CryptoFileScanner.cs',

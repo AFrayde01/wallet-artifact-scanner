@@ -16,7 +16,8 @@ param(
 # Never exports matched content or decrypts wallets. -ReportOnly skips source rechecks.
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
-. (Join-Path $PSScriptRoot 'scripts\CsvOutputSafety.ps1')
+$repositoryRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+. (Join-Path $repositoryRoot 'scripts\CsvOutputSafety.ps1')
 function Get-FilterText {
     param([string]$English, [string]$Spanish)
     if ($Language -eq 'es') { return $Spanish }
@@ -52,13 +53,13 @@ function Get-LocationKey {
 }
 
 function Initialize-Verification {
-    $assemblyPath = Join-Path $PSScriptRoot 'CryptoMnemonicScanner-10.12.dll'
+    $assemblyPath = Join-Path $repositoryRoot 'CryptoMnemonicScanner-10.12.dll'
     $assembly = [Reflection.Assembly]::LoadFile([IO.Path]::GetFullPath($assemblyPath))
     if ([CryptoFileScanner].Assembly.ManifestModule.ModuleVersionId -ne $assembly.ManifestModule.ModuleVersionId) {
         throw (Get-FilterText 'Open a fresh PowerShell session to use the current detector.' 'Abre otra sesión de PowerShell para usar el detector actual.')
     }
     $lists = @{}
-    $wordListRoot = Join-Path $PSScriptRoot 'resources\wordlists'
+    $wordListRoot = Join-Path $repositoryRoot 'resources\wordlists'
     foreach ($name in @('bip39-english.txt', 'bip39-spanish.txt', 'monero-english.txt', 'monero-english-old.txt', 'monero-spanish.txt', 'slip39-english.txt')) {
         $lists[$name] = [IO.File]::ReadAllLines((Join-Path $wordListRoot $name), [Text.Encoding]::UTF8)
     }
@@ -69,7 +70,7 @@ function Initialize-Verification {
     $dictionaryHashes = @($lists.Keys | ForEach-Object { (Get-FileHash -LiteralPath (Join-Path $wordListRoot $_) -Algorithm SHA256).Hash })
     [CryptoFileScanner]::ConfigurePublicDictionaries([string[]]$dictionaryHashes)
     # OCR is intentionally disabled. Extract existing PDF text and supported ZIP/Office content.
-    [CryptoDocumentScanner]::Configure((Join-Path $PSScriptRoot 'scripts\Read-PdfWorker.ps1'), ([long]$MaxDocumentMB * 1MB), ([long]$MaxExpandedMB * 1MB))
+    [CryptoDocumentScanner]::Configure((Join-Path $repositoryRoot 'scripts\Read-PdfWorker.ps1'), ([long]$MaxDocumentMB * 1MB), ([long]$MaxExpandedMB * 1MB))
 }
 
 function Read-ReportedCandidate {

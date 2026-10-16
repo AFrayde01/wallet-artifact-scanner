@@ -66,13 +66,13 @@ When scanning all drives, place reports and their cache in a folder excluded wit
 
 ## Follow-up utilities
 
-These commands are available beside the scanner in both the repository and the extracted package:
+Run these tools from `tools/review/` in both the repository and the extracted package:
 
 | Command | Use |
 | --- | --- |
-| `Filter-RecoveryCandidates.ps1` | Consolidate one prior report (`-CsvPath`) or a report folder (`-ReportDirectory`), then recheck reported files for BIP39 by default. `-VerificationScope AllReported` rechecks every reported location; `-ReportOnly` filters historical report rows without reopening source files. `-OutputPath` changes the destination. `-CpuCorePercent`, `-MaxContentMB`, `-MaxDocumentMB`, and `-MaxExpandedMB` set the resource limits. |
-| `New-ScanReviewReports.ps1` | Rebuild the derived review, priority, secondary-summary, and coverage CSVs from an existing main CSV. It does not reread the scanned files. |
-| `Verify-Bip39Structure.ps1` | Recheck BIP39 candidates already listed in reports. It does not inventory drives. Use `-ReportDirectory`, optional `-Recurse`, `-OutputDirectory`, `-CpuCorePercent`, `-MaxTextMB`, `-MaxDocumentMB`, `-MaxExpandedMB`, `-MaxPages`, and the match-count limits. |
+| `tools/review/Filter-RecoveryCandidates.ps1` | Consolidate one prior report (`-CsvPath`) or a report folder (`-ReportDirectory`), then recheck reported files for BIP39 by default. `-VerificationScope AllReported` rechecks every reported location; `-ReportOnly` filters historical report rows without reopening source files. `-OutputPath` changes the destination. `-CpuCorePercent`, `-MaxContentMB`, `-MaxDocumentMB`, and `-MaxExpandedMB` set the resource limits. |
+| `tools/review/Export-ScanReviewReports.ps1` | Rebuild the derived review, priority, secondary-summary, and coverage CSVs from an existing main CSV. It does not reread the scanned files. |
+| `tools/review/Verify-Bip39Structure.ps1` | Recheck BIP39 candidates already listed in reports. It does not inventory drives. Use `-ReportDirectory`, optional `-Recurse`, `-OutputDirectory`, `-CpuCorePercent`, `-MaxTextMB`, `-MaxDocumentMB`, `-MaxExpandedMB`, `-MaxPages`, and the match-count limits. |
 
 These utilities may read files named in a report. Process only reports you trust and keep their outputs private. They do not decrypt wallets or recover deleted files. Review tools do not use OCR.
 
@@ -89,14 +89,14 @@ Validated addresses are public indicators and remain secondary findings. A recog
 Build the distributable from the repository root with Windows PowerShell 5.1:
 
 ```powershell
-powershell.exe -NoProfile -File .\Build-Package.ps1
+powershell.exe -NoProfile -File .\tools\build\Build-Package.ps1
 ```
 
 The build checks dependency hashes, compiles the scanner assemblies, and writes `dist/windows-crypto-artifact-scan.zip`. If the locked DLLs are missing, restore them first; restoration downloads from NuGet and verifies the package and file hashes:
 
 ```powershell
-powershell.exe -NoProfile -File .\Restore-Dependencies.ps1
-powershell.exe -NoProfile -File .\Build-Package.ps1
+powershell.exe -NoProfile -File .\tools\build\Restore-Dependencies.ps1
+powershell.exe -NoProfile -File .\tools\build\Build-Package.ps1
 ```
 
 Run the regression suite after building. Its results go to a temporary directory outside the repository:
@@ -111,10 +111,11 @@ The tests create synthetic files and folders; they do not scan real drives or ru
 ## Repository layout
 
 ```text
-Scan-CryptoArtifacts.ps1, Filter-RecoveryCandidates.ps1, New-ScanReviewReports.ps1, Verify-Bip39Structure.ps1
+Scan-CryptoArtifacts.ps1  Main scanner entry point
 src/                    C# scanner and inspector sources
 scripts/                Internal PowerShell runtime helpers
-tools/                  Build, compiler, and dependency restoration scripts
+tools/build/            Build, compiler, and dependency restoration scripts
+tools/review/           Report export and recovery-candidate review tools
 resources/wordlists/    Public mnemonic dictionaries
 docs/                   Security and third-party documentation
 dependencies/           Locked PDF reader DLLs, hashes, and notices
@@ -122,6 +123,6 @@ tests/                  Synthetic regression checks
 dist/                   Generated distributable ZIP
 ```
 
-`Build-Package.ps1`, `Compile-Scanner.ps1`, `Compile-Bip39Inspector.ps1`, and `Restore-Dependencies.ps1` remain at the root as compatibility entry points for their corresponding scripts under `tools/`. The ZIP preserves the same runtime folder layout and includes only the public commands, runtime code, required resources, locked dependencies, and documentation.
+The root contains the main scanner, the English and Spanish READMEs, and the license. Review utilities live in `tools/review/`; build and dependency commands live in `tools/build/`. `Export-ScanReviewReports.ps1` exports review reports from an existing scan CSV. Run commands using their full relative paths. The ZIP preserves the runtime layout and includes the review tools, required resources, locked dependencies, and documentation.
 
 See [docs/THIRD-PARTY.md](docs/THIRD-PARTY.md) for component notices and licenses. The project source is licensed under [MIT](LICENSE). For vulnerability reporting, see [docs/SECURITY.md](docs/SECURITY.md).
